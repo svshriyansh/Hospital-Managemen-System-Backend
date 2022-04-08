@@ -1,0 +1,8 @@
+{"req":{
+    "body":{
+        "objectName": "Pen",
+        "color" : "Red",
+        "location" : "Hall"
+    },
+    "params":{"name":"Pen"}
+}}

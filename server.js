@@ -1,32 +1,33 @@
-const mongoose=require('mongoose');
-const express = require('express');
-const app = express();
-const uri = "mongodb+srv://Shriyansh:Shriyansh1234@cluster0.gpzb5.mongodb.net/Star_Wars?retryWrites=true&w=majority"
+const cors  = require('cors')
+const express = require("express")
+const mongoose = require('mongoose')
+const url = 'mongodb+srv://Shriyansh:eb0Q3dK7SPn0iSqM@cluster0.gpzb5.mongodb.net/SignUp-SignIn'
+const routes = require('./routes/auth')
+const hospitalRoutes = require('./routes/hospital')
+const patientRoutes = require('./routes/patients')
+const recordRpotes = require('./routes/medicalRecords')
 
-//app.use(bodyParser.urlencoded({ extended: true}))
-// app.use(express.json({ extended: false }));
-app.use(express.json()); // Used to parse JSON bodies
-app.use(express.urlencoded()); 
+const app = express()
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(cors());
+
+mongoose.connect(url,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(
+    ()=>{console.log("Database connected...")},
+    err => {console.log("Error found",err);}
+)
+
+// app.use(express.json({extended: false}))
+
+app.use('/',routes)
+app.use('/hospital',hospitalRoutes)
+app.use('/patient',patientRoutes)
+app.use('/records',recordRpotes)
 
 
-const connectDB = async() =>{
-    try{
-        await mongoose.connect(uri,{
-            useUnifiedTopology:true,
-            useNewUrlParser:true,
-        });
-        console.log('MongoDB connected')
-    }
-    catch(err){
-        console.error(err.message);
-        process.exit(1);
-    }
-}
-
-connectDB()
-const starQuotes = require('./routes/quotes')
-app.use('/',starQuotes) 
-
-app.listen(3000, function() {
-    console.log('Listning on 3000')
+app.listen(8000,()=>{
+    console.log('Server Connected');
 })

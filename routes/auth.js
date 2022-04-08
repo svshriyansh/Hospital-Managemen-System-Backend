@@ -11,32 +11,19 @@ const user  = require('../models/user');
 
 // * for accessing by admin only
 
+
 routes.get('/users', authenticationToken, async(req,res)=>{
-    let user = await User.findOne({username: req.user.username})
-    if (user.username == 'Shriyansh'){
+    // let user = await User.findOne({username: req.user.username})
     try{
         const user = await User.find()
         res.json(user)
     }catch(err){
         res.send("Error",err)
     }
-}else{
-    res.send("You can't access the db")
-}
 })
 
-// routes.get('/users', authenticationToken, async(req,res)=>{
-//     // let user = await User.findOne({username: req.user.username})
-//     try{
-//         const user = await User.find()
-//         res.json(user)
-//     }catch(err){
-//         res.send("Error",err)
-//     }
-// })
-
 routes.get('/user', authenticationToken ,async(req,res)=>{
-    let user = await User.findOne({username: req.user.name})
+    let user = await User.findOne({username: req.user.username})
     res.send(user)
 })
 

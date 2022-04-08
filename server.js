@@ -1,7 +1,9 @@
 const cors  = require('cors')
 const express = require("express")
 const mongoose = require('mongoose')
-const url = 'mongodb+srv://Shriyansh:eb0Q3dK7SPn0iSqM@cluster0.gpzb5.mongodb.net/SignUp-SignIn'
+require('dotenv').config()
+const {dbuser,dbPassword} =  process.env
+const url = `mongodb+srv://${dbuser}:${dbPassword}@cluster0.gpzb5.mongodb.net/SignUp-SignIn`
 const routes = require('./routes/auth')
 const hospitalRoutes = require('./routes/hospital')
 const patientRoutes = require('./routes/patients')
@@ -19,8 +21,6 @@ mongoose.connect(url,{
     ()=>{console.log("Database connected...")},
     err => {console.log("Error found",err);}
 )
-
-// app.use(express.json({extended: false}))
 
 app.use('/',routes)
 app.use('/hospital',hospitalRoutes)

@@ -3,6 +3,7 @@ require('dotenv').config()
 const blacklisttoken = require('../models/token')
 const authenticationToken = require('../middleware/auth')
 const express = require('express')
+const {check, validationResult} = require('express-validator')
 const routes = express.Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
@@ -55,25 +56,32 @@ routes.post('/signUP', async(req,res)=>{
     }
 })
 
-routes.post('/signIn', async(req,res)=>{
-    let username = req.body.username
+routes.post('/signIn', 
+    // [
+    //     check("username","Username is required").not().isEmpty,
+    //     check("password","password is required").not().isEmpty
+    // ]
+    async(req,res)=>{
+    // const error = validationResult(req)
+    // if(!error.isEmpty()){
+        let username = req.body.username
     // let password = req.body.password
-    let user = await User.findOne({username: username})
-    if (!user){
-        return res.send("No user registered")
-    }
-    try{
-        if(await bcrypt.compare(req.body.password,user.password)){
-            user = {username: username}
-            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-            res.json({accessToken: accessToken})
-            // res.send('success')
+        let user = await User.findOne({username: username})
+        if (!user){
+            return res.send("No user registered")
         }
-    }catch(err){
-         console.log(err)
-         res.send("Wrong Password")
-    }
-
+        try{
+            if(await bcrypt.compare(req.body.password,user.password)){
+                user = {username: username}
+                const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+                res.json({accessToken: accessToken})
+                // res.send('success')
+            }
+        }catch(err){
+            console.log(err)
+            res.send("Wrong Password")
+        }
+    
 })
 
 routes.get('/logout',authenticationToken ,async function(req,res){
